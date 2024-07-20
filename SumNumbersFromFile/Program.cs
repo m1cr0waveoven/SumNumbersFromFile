@@ -19,7 +19,7 @@
             {
                 // If you just want to fix the conversation error use the commented out liens as a reference, but it will not solve the other problems:
                 //string tempLine = reader.ReadLine();
-                //if (int.TryParse(tempLine, out int convertedLine))
+                //if (!int.TryParse(tempLine, out int convertedLine))
                 //    continue;
                 //totalLines[parts] = convertedLine;
                 //parts++;
@@ -52,7 +52,10 @@
             // Advanced
             int count = SimpleSolutionEnumerable(filename).Count();
             Console.WriteLine($"Count: {count}");
-
+            count = EnumerableSolution2(filename).Count();
+            Console.WriteLine($"Count: {count}");
+            count = LINQSolution4WithExceptionHandling(filename).Count();
+            Console.WriteLine($"Count: {count}");
             Console.ReadKey(true);
         }
 
@@ -130,6 +133,19 @@
             return convertedData.ToArray();
         }
 
+        private static int[] SimpleSolution2(string filename)
+        {
+            if (!File.Exists(filename))
+            {
+                Console.WriteLine($"The input file named {filename} was not found!");
+                return Array.Empty<int>();
+            }
+
+            string[] dataLines = File.ReadAllLines(filename);
+            return Array.ConvertAll(dataLines, Convert.ToInt32);
+            //return Array.ConvertAll(dataLines, int.Parse);
+
+        }
         private static IEnumerable<int> SimpleSolutionEnumerable(string filename)
         {
             if (!File.Exists(filename))
@@ -146,6 +162,42 @@
                     yield return value;
             }
         }
+        private static IEnumerable<string> EnumerableSolution1(string filename)
+        {
+            if (!File.Exists(filename))
+            {
+                Console.WriteLine($"The input file named {filename} was not found!");
+                yield break;
+            }
+
+            using (var streamReader = new StreamReader(filename, new FileStreamOptions { Access = FileAccess.Read, Mode = FileMode.Open, Options = FileOptions.SequentialScan }))
+            {
+                while (!streamReader.EndOfStream)
+                {
+                    yield return streamReader.ReadLine();
+                }
+            }
+        }
+
+        private static IEnumerable<int> EnumerableSolution2(string filename)
+        {
+            if (!File.Exists(filename))
+            {
+                Console.WriteLine($"The input file named {filename} was not found!");
+                yield break;
+            }
+
+            using (var streamReader = new StreamReader(filename, new FileStreamOptions { Access = FileAccess.Read, Mode = FileMode.Open, Options = FileOptions.SequentialScan }))
+            {
+                while (!streamReader.EndOfStream)
+                {
+                    if (int.TryParse(streamReader.ReadLine(), out int value))
+                        yield return value;
+
+                    continue;
+                }
+            }
+        }
 
         private static IEnumerable<int> LINQSolution1(string filename)
         {
@@ -154,8 +206,7 @@
                 Console.WriteLine($"The input file named {filename} was not found!");
                 return Enumerable.Empty<int>();
             }
-            var a = from line in File.ReadAllLines(filename)
-                    select int.TryParse(line, out int value) ? value : default;
+
             return File.ReadAllLines(filename).Select(line =>
                 int.TryParse(line, out int value) ? value : default);
         }
@@ -212,7 +263,5 @@
                    where !string.IsNullOrEmpty(line)
                    select line.MapDefaultIfException<string, int, FormatException>(Convert.ToInt32);
         }
-
-
     }
 }
