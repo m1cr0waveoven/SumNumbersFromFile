@@ -44,17 +44,17 @@
         AfterRefactor:
             // After refactor - naive aproach, tried to follow the original code and not the task.
             string filename = "datas.txt";
-            string[] dataFromFile = ReadDataFromFileIntoArray(filename);
-            int[] processedData = GetIntegerDataParts(dataFromFile);
+            string[] dataFromFile = Solutions.ReadDataFromFileIntoArray(filename);
+            int[] processedData = Solutions.GetIntegerDataParts(dataFromFile);
             Console.WriteLine($"The file contains datas from {processedData.Length} members.");
             // Another aproach
-            Console.WriteLine($"Simple solution result: {SimpleSolution(filename).Length}");
+            Console.WriteLine($"Simple solution result: {Solutions.SimpleSolution(filename).Length}");
             // Advanced
-            int count = SimpleSolutionEnumerable(filename).Count();
+            int count = Solutions.SimpleSolutionEnumerable(filename).Count();
             Console.WriteLine($"Count: {count}");
-            count = EnumerableSolution2(filename).Count();
+            count = Solutions.EnumerableSolution2(filename).Count();
             Console.WriteLine($"Count: {count}");
-            count = LINQSolution4WithExceptionHandling(filename).Count();
+            count = Solutions.LINQSolution4WithExceptionHandling(filename).Count();
             Console.WriteLine($"Count: {count}");
             Console.ReadKey(true);
         }
