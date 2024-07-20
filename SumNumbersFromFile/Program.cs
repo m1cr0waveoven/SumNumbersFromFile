@@ -41,7 +41,7 @@
             }
             Console.WriteLine($"The file contains datas from {dataParts} members.");
 
-AfterRefactor:
+        AfterRefactor:
             // After refactor - naive aproach, tried to follow the original code and not the task.
             string filename = "datas.txt";
             string[] dataFromFile = ReadDataFromFileIntoArray(filename);
@@ -146,5 +146,73 @@ AfterRefactor:
                     yield return value;
             }
         }
+
+        private static IEnumerable<int> LINQSolution1(string filename)
+        {
+            if (!File.Exists(filename))
+            {
+                Console.WriteLine($"The input file named {filename} was not found!");
+                return Enumerable.Empty<int>();
+            }
+            var a = from line in File.ReadAllLines(filename)
+                    select int.TryParse(line, out int value) ? value : default;
+            return File.ReadAllLines(filename).Select(line =>
+                int.TryParse(line, out int value) ? value : default);
+        }
+
+        private static IEnumerable<int> LINQSolution2(string filename)
+        {
+            if (!File.Exists(filename))
+            {
+                Console.WriteLine($"The input file named {filename} was not found!");
+                return Enumerable.Empty<int>();
+            }
+
+            return from line in File.ReadAllLines(filename)
+                   select int.TryParse(line, out int value) ? value : default;
+        }
+
+        private static IEnumerable<int> LINQSolution3(string filename)
+        {
+            if (!File.Exists(filename))
+            {
+                Console.WriteLine($"The input file named {filename} was not found!");
+                return Enumerable.Empty<int>();
+            }
+
+            // Throws FormatException if string is not convertable to int
+            return File.ReadAllLines(filename)
+                .Where(line => !string.IsNullOrEmpty(line))
+                .Select(line => Convert.ToInt32(line));
+        }
+
+        private static IEnumerable<int> LINQSolution4(string filename)
+        {
+            if (!File.Exists(filename))
+            {
+                Console.WriteLine($"The input file named {filename} was not found!");
+                return Enumerable.Empty<int>();
+            }
+
+            // Throws FormatException if string is not convertable to int
+            return from line in File.ReadAllLines(filename)
+                   where !string.IsNullOrEmpty(line)
+                   select Convert.ToInt32(line);
+        }
+
+        private static IEnumerable<int> LINQSolution4WithExceptionHandling(string filename)
+        {
+            if (!File.Exists(filename))
+            {
+                Console.WriteLine($"The input file named {filename} was not found!");
+                return Enumerable.Empty<int>();
+            }
+
+            return from line in File.ReadAllLines(filename)
+                   where !string.IsNullOrEmpty(line)
+                   select line.MapDefaultIfException<string, int, FormatException>(Convert.ToInt32);
+        }
+
+
     }
 }
