@@ -16,7 +16,7 @@ namespace SumNumbersFromFile
             int parts = 0;
             int[] totalLines = new int[100]; // A List<int> would be more beneficial
             // Do you only want to read the file for the first missing line? Because the code starting with the for loop suggests otherwise.
-            // You can not test an integer for null if its a non nullable value thype -> "int? line" can be null, but "int line can not" 
+            // You can not test an integer for null if its a non nullable value thype -> "int? line" can be null, but "int line" can not
             while (line != null)
             {
                 // If you just want to fix the conversation error use the commented out liens as a reference, but it will not solve the other problems:
@@ -66,7 +66,5 @@ namespace SumNumbersFromFile
             Console.ReadLine();
             Console.ReadKey(true);
         }
-
-        
     }
 }
